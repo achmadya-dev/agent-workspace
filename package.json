@@ -1,0 +1,28 @@
+{
+  "name": "hermes-capability-workspace",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "bun@1.3.5",
+  "engines": {
+    "bun": ">=1.3.5"
+  },
+  "description": "A TypeScript registry and CLI boundary for Hermes agent capabilities.",
+  "bin": {
+    "agent-workspace": "bin/agent-workspace"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "bun run build && bun test",
+    "dev": "bun run src/cli.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.3.14",
+    "@types/node": "^22.10.2",
+    "typescript": "^5.7.2"
+  },
+  "dependencies": {
+    "commander": "^13.1.0"
+  }
+}

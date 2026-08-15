@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+SOURCE="${BASH_SOURCE[0]}"
+while [[ -L "$SOURCE" ]]; do
+  DIRECTORY="$(cd -P "$(dirname "$SOURCE")" >/dev/null 2>&1 && pwd)"
+  SOURCE="$(readlink "$SOURCE")"
+  [[ "$SOURCE" != /* ]] && SOURCE="$DIRECTORY/$SOURCE"
+done
+REPOSITORY="$(cd -P "$(dirname "$SOURCE")/.." >/dev/null 2>&1 && pwd)"
+
+if command -v bun >/dev/null 2>&1; then
+  BUN="$(command -v bun)"
+elif [[ -x "${BUN_INSTALL:-$HOME/.bun}/bin/bun" ]]; then
+  BUN="${BUN_INSTALL:-$HOME/.bun}/bin/bun"
+else
+  printf '%s\n' '{"ok":false,"error":"Bun runtime is unavailable"}' >&2
+  exit 127
+fi
+
+if [[ -r "$REPOSITORY/.env" ]]; then
+  exec "$BUN" --env-file="$REPOSITORY/.env" "$REPOSITORY/dist/cli.js" "$@"
+fi
+exec "$BUN" "$REPOSITORY/dist/cli.js" "$@"
